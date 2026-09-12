@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     name: 🎉 Trabajo de Despliegue
+    runs-on: ubuntu-latest
 
     steps:
       - name: 🚚 Obteniendo el código más reciente
@@ -16,10 +17,10 @@ jobs:
       - name: 📂 Sincronizando archivos via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_RUTA }} # Change if using another host
-          username: ${{ secrets.FTP_USUARIO }}
-          password: ${{ secrets.FTP_CLAVE }}
-          server-dir: ${{ secrets.FTP_CARPETA }} # Replace with your correct path
+          server: ftp-jaloji.alwaysdata.net # Change if using another host
+          username: jaloji
+          password: clase1234
+          server-dir: www/ # Replace with your correct path
           protocol: ftps
           timeout: 86400000
           log-level: standard
