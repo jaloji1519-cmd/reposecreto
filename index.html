@@ -1,0 +1,458 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenAI | Noticia Destacada</title>
+    <style>
+      :root {
+        --bg-1: #070b1a;
+        --bg-2: #111c33;
+        --primary: #5ee6ff;
+        --secondary: #ff4d6d;
+        --accent: #ffb703;
+        --text: #edf4ff;
+        --muted: #b9c9df;
+        --card: rgba(19, 31, 55, 0.8);
+        --line: rgba(255,255,255,0.12);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(255,77,109,0.25), transparent 35%),
+          radial-gradient(circle at bottom right, rgba(94,230,255,0.25), transparent 35%),
+          linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      }
+
+      .container {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .hero {
+        padding: 60px 0 40px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding-bottom: 24px;
+      }
+
+      .brand {
+        font-weight: 800;
+        letter-spacing: 1px;
+        font-size: 1.1rem;
+      }
+
+      .tag {
+        display: inline-block;
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 999px;
+        padding: 8px 14px;
+        color: var(--muted);
+        background: rgba(255,255,255,0.02);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 28px;
+        align-items: center;
+      }
+
+      .headline {
+        font-size: clamp(2.2rem, 4vw, 4.5rem);
+        line-height: 0.96;
+        margin: 16px 0 18px;
+        font-weight: 900;
+      }
+
+      .headline span {
+        color: var(--secondary);
+      }
+
+      .lead {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: var(--muted);
+        max-width: 760px;
+      }
+
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 26px;
+      }
+
+      .btn {
+        display: inline-block;
+        text-decoration: none;
+        padding: 14px 22px;
+        border-radius: 14px;
+        font-weight: 700;
+        transition: transform 0.2s ease;
+      }
+
+      .btn:hover { transform: translateY(-2px); }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--secondary), #ff7a59);
+        color: white;
+      }
+
+      .btn-secondary {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--line);
+        color: var(--text);
+      }
+
+      .hero-card {
+        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 22px;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+      }
+
+      .hero-card .image {
+        height: 320px;
+        border-radius: 18px;
+        background-image: url('https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=900&q=80');
+        background-size: cover;
+        background-position: center;
+        border: 1px solid rgba(255,255,255,0.14);
+      }
+
+      .stats {
+        margin-top: 26px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0,1fr));
+        gap: 16px;
+      }
+
+      .stat {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px 18px 14px;
+      }
+
+      .stat small {
+        display: block;
+        color: var(--muted);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: clamp(1.7rem, 2vw, 2.4rem);
+        line-height: 1;
+      }
+
+      .section {
+        padding: 32px 0;
+      }
+
+      .section h2 {
+        font-size: clamp(1.8rem, 2vw, 2.5rem);
+        margin: 0 0 18px;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 22px;
+      }
+
+      .check-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 16px;
+      }
+
+      .check-list li {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .check-list li::before {
+        content: "✓";
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(94,230,255,0.12);
+        color: var(--primary);
+        font-weight: 900;
+        flex-shrink: 0;
+      }
+
+      .mini-card {
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 20px;
+      }
+
+      .mini-card h3 {
+        margin: 0 0 10px;
+        font-size: 1.1rem;
+      }
+
+      .mini-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .image-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0,1fr));
+        gap: 18px;
+      }
+
+      .image-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 16px 45px rgba(0,0,0,0.25);
+      }
+
+      .image-card .thumb {
+        height: 220px;
+        background-size: cover;
+        background-position: center;
+      }
+
+      .image-card .content {
+        padding: 16px;
+      }
+
+      .image-card h3 {
+        margin: 0 0 8px;
+        font-size: 1.1rem;
+      }
+
+      .image-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      .status-box {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0,1fr));
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .status-box .mini-card {
+        min-height: 140px;
+      }
+
+      .tagline {
+        color: var(--primary);
+        font-weight: 700;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .footer-note {
+        text-align: center;
+        color: var(--muted);
+        padding: 30px 0 50px;
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 900px) {
+        .hero-grid, .grid-2, .status-box, .image-grid, .stats {
+          grid-template-columns: 1fr;
+        }
+
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="hero">
+        <div class="topbar">
+          <div class="brand">REPOSECRETO // OPENAI</div>
+          <span class="tag">Noticias de impacto</span>
+        </div>
+
+        <div class="hero-grid">
+          <div>
+            <span class="tag">Actualidad global</span>
+            <h1 class="headline">OpenAI: la noticia que <span>más está preocupando</span> al mundo tecnológico</h1>
+            <p class="lead">
+              La conversación alrededor de OpenAI ya no es solo sobre innovación: también gira en torno a
+              la regulación, la privacidad, el impacto en el empleo y la velocidad con la que cada avance pasa
+              de ser una promesa a una realidad con consecuencias sociales y económicas.
+            </p>
+
+            <div class="cta-row">
+              <a class="btn btn-primary" href="#analisis">Ver análisis</a>
+              <a class="btn btn-secondary" href="#datos">Ver datos</a>
+            </div>
+
+            <div class="stats">
+              <div class="stat">
+                <small>Atención total</small>
+                <strong>1.8M</strong>
+              </div>
+              <div class="stat">
+                <small>Interés</small>
+                <strong>87%</strong>
+              </div>
+              <div class="stat">
+                <small>Resolución</small>
+                <strong>72h</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-card">
+            <div class="image" aria-label="Imagen destacada de OpenAI"></div>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section id="analisis" class="section">
+          <h2>¿Qué es lo que más preocupa de esta noticia?</h2>
+          <div class="grid-2">
+            <div class="panel">
+              <ul class="check-list">
+                <li><strong>Privacidad y control de datos:</strong> la gente teme que sistemas cada vez más avanzados puedan manejar información sensible sin una supervisión clara.</li>
+                <li><strong>Impacto laboral:</strong> muchas personas se preguntan si la automatización reforzada por IA reemplazará tareas humanas en sectores clave.</li>
+                <li><strong>Regulación y ética:</strong> el debate crece alrededor de quién define los límites, cómo se monitorea el uso y qué responsabilidades tienen las empresas.</li>
+                <li><strong>Confianza tecnológica:</strong> la noticia genera preocupación sobre si estos avances se están desarrollando con criterio, seguridad y transparencia suficientes.</li>
+              </ul>
+            </div>
+
+            <div class="panel">
+              <div class="mini-card">
+                <span class="tagline">Resumen rápido</span>
+                <h3>Lo más importante</h3>
+                <p>
+                  La reacción global no se limita a la tecnología: toca decisiones de política pública, economía,
+                  educación y la forma en que la sociedad entiende la inteligencia artificial.
+                </p>
+              </div>
+              <br />
+              <div class="mini-card">
+                <span class="tagline">Conclusión</span>
+                <h3>El tema que más conlleva</h3>
+                <p>
+                  El punto más sensible es el equilibrio entre innovación y responsabilidad. La noticia destaca
+                  que el futuro de la IA depende de cómo se gestionen sus riesgos, no solo de cuánto puede hacer.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Imágenes importantes</h2>
+          <div class="image-grid">
+            <article class="image-card">
+              <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80');"></div>
+              <div class="content">
+                <h3>IA y decisiones humanas</h3>
+                <p>La discusión central gira en cómo la inteligencia artificial influye en procesos clave de la vida cotidiana.</p>
+              </div>
+            </article>
+
+            <article class="image-card">
+              <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=80');"></div>
+              <div class="content">
+                <h3>Regulación y control</h3>
+                <p>El debate se intensifica cuando se habla de normas, ética, vigilancia y límites para el uso de la IA.</p>
+              </div>
+            </article>
+
+            <article class="image-card">
+              <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80');"></div>
+              <div class="content">
+                <h3>Impacto social</h3>
+                <p>El tema también afecta educación, empleo, atención al cliente y la confianza en los sistemas inteligentes.</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="datos" class="section">
+          <h2>Datos de atención a la noticia</h2>
+          <div class="status-box">
+            <div class="mini-card">
+              <span class="tagline">Lectores atentos</span>
+              <h3>1.8M</h3>
+              <p>Personas que revisaron, compartieron o reaccionaron al tema en plataformas digitales.</p>
+            </div>
+
+            <div class="mini-card">
+              <span class="tagline">Tasa de interés</span>
+              <h3>87%</h3>
+              <p>Porcentaje de interacción con contenido relacionado a OpenAI durante el pico de atención.</p>
+            </div>
+
+            <div class="mini-card">
+              <span class="tagline">Tiempo estimado</span>
+              <h3>72 horas</h3>
+              <p>Tiempo promedio en que una noticia de este tipo suele recibir respuesta, aclaración o actualización.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>¿Ya se resolvió?</h2>
+          <div class="panel">
+            <p class="lead" style="margin-top:0;">
+              En términos generales, la noticia ya fue abordada por la comunidad tecnológica y por las empresas involucradas,
+              pero el tema sigue activo porque los debates sobre regulación, confianza y aplicación real de la IA siguen evolucionando.
+              En otras palabras: la noticia se respondió en parte, pero su impacto continúa.
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <div class="footer-note">
+        Nota: los datos mostrados en esta plantilla son de ejemplo para ilustrar el diseño. Si quieres, puedes reemplazarlos por los valores exactos de tu fuente oficial.
+      </div>
+    </div>
+  </body>
+</html>
